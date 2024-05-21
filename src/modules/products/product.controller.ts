@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { productServices } from "./product.services";
 
-export const createProduct = async (req: Request, res: Response) => {
+const createProduct = async (req: Request, res: Response) => {
   const result = await productServices.createProduct(req.body);
   res.json({
     success: true,
@@ -9,4 +9,13 @@ export const createProduct = async (req: Request, res: Response) => {
     data: result,
   });
 };
-export const productController = { createProduct };
+
+const getAllProducts = async (req: Request, res: Response) => {
+  const result = await productServices.getAllProducts();
+  res.json({
+    success: true,
+    message: "Products fetched successfully",
+    data: result,
+  });
+}
+export const productController = { createProduct, getAllProducts };
