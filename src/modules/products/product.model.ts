@@ -1,8 +1,8 @@
-import {Schema, model} from "mongoose";
-import { TInventory, TVariant } from "./product.interface";
+import mongoose from "mongoose";
+import { TInventory, TProduct, TVariant } from "./product.interface";
 
 // Variant Schema
-const variantSchema = new Schema<TVariant>({
+const variantSchema = new mongoose.Schema<TVariant>({
   type: {
     type: String,
     required: true,
@@ -14,7 +14,7 @@ const variantSchema = new Schema<TVariant>({
 });
 
 // Inventory Schema
-const inventorySchema = new Schema<TInventory>({
+const inventorySchema = new mongoose.Schema<TInventory>({
   quantity: {
     type: Number,
     required: true,
@@ -26,7 +26,7 @@ const inventorySchema = new Schema<TInventory>({
 });
 
 // Product Schema
-const productSchema = new Schema()<TProduct>({
+const productSchema = new mongoose.Schema<TProduct>({
   name: {
     type: String,
     required: true,
@@ -57,8 +57,6 @@ const productSchema = new Schema()<TProduct>({
   },
 });
 
-const VariantModel = model<TVariant>("VariantModel", variantSchema);
-const InventoryModel = model<TInventory>("InventoryModel",inventorySchema);
-const ProductModel = model<TProduct>("ProductModel", productSchema);
+const ProductModel = mongoose.model<TProduct>("Product", productSchema);
 
 export { InventoryModel, ProductModel, VariantModel };
