@@ -6,6 +6,12 @@ const createOrderToDB = async (payload: TOrder) => {
     return result;
 }
 
+const getAllOrders = async () => {
+    const result = await OrderModel.find({});
+    return result;
+  };
+
 export const orderServices = {
-    createOrderToDB
+    createOrderToDB,
+    getAllOrders
 }
