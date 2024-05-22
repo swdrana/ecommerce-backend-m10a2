@@ -37,7 +37,7 @@ const getAllProducts = async (req: Request, res: Response) => {
 
 const getProductById = async (req: Request, res: Response) => {
   try {
-    const result = await productServices.getProductById(req.params.id);
+    const result = await productServices.getProductById(req.params.productId);
     if (!result) {
       return res.status(404).json({
         success: false,
@@ -64,4 +64,33 @@ const getProductById = async (req: Request, res: Response) => {
   }
 };
 
-export const productController = { createProduct, getAllProducts, getProductById };
+const updateProductByID = async (req: Request, res: Response) => {
+  try {
+    const result = await productServices.updateProductByID(req.params.productId, req.body);
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    res.json({
+      success: true,
+      message: "Product updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    if (error.name === "CastError" && error.kind === "ObjectId") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID format",
+      });
+    }
+    res.status(500).json({
+      success: false,
+      message: "Failed to update product",
+      error: error.message,
+    });
+  } 
+};
+
+export const productController = { createProduct, getAllProducts, getProductById, updateProductByID };

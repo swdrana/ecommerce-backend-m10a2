@@ -11,9 +11,14 @@ const getAllProducts = async () => {
   return result;
 };
 
-const getProductById = async (id: string) => {
-  const result = await ProductModel.findById(id);
+const getProductById = async (productId: string) => {
+  const result = await ProductModel.findById(productId);
   return result;
 };
 
-export const productServices = { createProduct, getAllProducts, getProductById };
+const updateProductByID = async (productId: string, payload: TProduct) => {
+  const result = await ProductModel.findByIdAndUpdate(productId, payload, { new: true });
+  return result;
+};
+
+export const productServices = { createProduct, getAllProducts, getProductById, updateProductByID };
