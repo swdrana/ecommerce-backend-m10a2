@@ -8,7 +8,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "prod": "node ./dist/server.js",
     "lint": "npx eslint ./src",
-    "lintFix": "npx eslint ./src --fix"
+    "lintFix": "npx eslint ./src --fix",
+    "start": "node ./dist/server.js"
   },
   "keywords": [],
   "author": "",
