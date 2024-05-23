@@ -59,4 +59,4 @@ const productSchema = new mongoose.Schema<TProduct>({
 
 const ProductModel = mongoose.model<TProduct>("Product", productSchema);
 
-export { InventoryModel, ProductModel, VariantModel };
+export { ProductModel };

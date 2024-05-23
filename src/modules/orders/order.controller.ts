@@ -45,42 +45,50 @@ const createOrder = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    if (error.name === "ValidationError") {
-      return res.status(400).json({
+    if (error instanceof Error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).json({
+          success: false,
+          message: error.message,
+        });
+      }
+      res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Failed to create order",
+        error: error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "An unknown error occurred",
       });
     }
-    res.status(500).json({
-      success: false,
-      message: "Failed to create order",
-      error: error.message,
-    });
   }
 };
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const email = req.query.email as string;
-
-    let result;
-    if (email) {
-      result = await orderServices.getOrdersByEmail(email);
-    } else {
-      result = await orderServices.getAllOrders();
-    }
-
+    const result = await orderServices.getAllOrders();
     res.status(200).json({
       success: true,
-      message: email ? `Orders fetched successfully for user email!` : "Orders fetched successfully!",
+      message: "Orders fetched successfully!",
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch orders",
-      error: error.message,
-    });
+    if (error instanceof Error) {
+      if (error instanceof Error) {
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch orders",
+          error: error.message,
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: "An unknown error occurred",
+        });
+      }
+    }
   }
 };
 

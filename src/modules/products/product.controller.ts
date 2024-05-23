@@ -10,11 +10,18 @@ const createProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to create product",
-      error: error.message,
-    });
+    if (error instanceof Error && error.name === "ValidationError") {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to create product",
+        error: error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "An Unknown error occurred",
+      });
+    }
   }
 };
 
@@ -27,11 +34,18 @@ const getAllProducts = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch products",
-      error: error.message,
-    });
+    if (error instanceof Error) {
+     return  res.status(500).json({
+        success: false,
+        message: "Failed to fetch products",
+        error: error.message,
+      });
+    }else{
+      res.status(500).json({
+        success: false,
+        message: "An Unknown error occurred",
+      });
+    }
   }
 };
 
@@ -50,7 +64,7 @@ const getProductById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    if (error.name === "CastError" && error.kind === "ObjectId") {
+    if( error instanceof Error) {
       return res.status(400).json({
         success: false,
         message: "Invalid product ID format",
@@ -59,7 +73,7 @@ const getProductById = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch product",
-      error: error.message,
+      error: error
     });
   }
 };
@@ -82,7 +96,7 @@ const updateProductByID = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    if (error.name === "CastError" && error.kind === "ObjectId") {
+    if ( error instanceof Error) {
       return res.status(400).json({
         success: false,
         message: "Invalid product ID format",
@@ -91,7 +105,7 @@ const updateProductByID = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to update product",
-      error: error.message,
+      error: error,
     });
   }
 };
@@ -113,7 +127,7 @@ const deleteProductByID = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    if (err.name === "CastError" && err.kind === "ObjectId") {
+    if ( err instanceof Error) {
       return res.status(400).json({
         success: false,
         message: "Invalid product ID",
@@ -122,7 +136,7 @@ const deleteProductByID = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to delete product",
-      error: err.message,
+      error: err,
     });
   }
 };
@@ -144,11 +158,17 @@ const searchOrGetAllProducts = async (req: Request, res: Response) => {
         data: result,
       });
     } catch (error) {
-      res.status(500).json({
+      if(error instanceof Error) {
+        res.status(500).json({
         success: false,
         message: "Failed to fetch products",
         error: error.message,
       });
+      }
+      res.status(500).json({
+        success: false,
+        message: "An Unknown error occurred",
+      })
     }
   } else {
     getAllProducts(req, res);
