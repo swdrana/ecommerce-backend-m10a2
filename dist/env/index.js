@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 function getPort() {
-    const port = process.env.PORT ? parseInt(process.env.PORT) : NaN;
+    const port = process.env.PORT ? parseInt(process.env.PORT) : 5500;
     if (isNaN(port)) {
         throw new Error("PORT environment variable is not set or is not a valid number");
     }
