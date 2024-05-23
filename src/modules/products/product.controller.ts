@@ -1,16 +1,25 @@
 import { Request, Response } from "express";
+import { z } from "zod";
 import { productServices } from "./product.services";
+import { productValidationSchema } from "./product.validation";
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const result = await productServices.createProduct(req.body);
+    const validateData = productValidationSchema.parse(req.body);
+    const result = await productServices.createProduct(validateData);
     res.json({
       success: true,
       message: "Product created successfully",
       data: result,
     });
   } catch (error) {
-    if (error instanceof Error && error.name === "ValidationError") {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: error.errors
+      })
+    } else if (error instanceof Error) {
       return res.status(500).json({
         success: false,
         message: "Failed to create product",

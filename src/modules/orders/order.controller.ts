@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { productServices } from "../products/product.services";
 import { orderServices } from "./order.services";
+import { orderValidationSchema } from "./order.validation";
+import { z } from "zod";
 
 const createOrder = async (req: Request, res: Response) => {
   try {
@@ -30,7 +32,8 @@ const createOrder = async (req: Request, res: Response) => {
 
     // Create the order
     const orderData = { email, productId, price, quantity };
-    const result = await orderServices.createOrderToDB(orderData);
+    const validationOrderData = orderValidationSchema.parse(orderData)
+    const result = await orderServices.createOrderToDB(validationOrderData);
 
     if (!result) {
       return res.status(404).json({
@@ -45,7 +48,12 @@ const createOrder = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    if (error instanceof Error) {
+    if(error instanceof z.ZodError){
+      return res.status(400).json({
+        success: false,
+        message: error.issues
+      })
+    }else if (error instanceof Error) {
       if (error.name === "ValidationError") {
         return res.status(400).json({
           success: false,

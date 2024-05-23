@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderController = void 0;
 const product_services_1 = require("../products/product.services");
 const order_services_1 = require("./order.services");
+const order_validation_1 = require("./order.validation");
+const zod_1 = require("zod");
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, productId, price, quantity } = req.body;
@@ -36,7 +38,8 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         yield product.save();
         // Create the order
         const orderData = { email, productId, price, quantity };
-        const result = yield order_services_1.orderServices.createOrderToDB(orderData);
+        const validationOrderData = order_validation_1.orderValidationSchema.parse(orderData);
+        const result = yield order_services_1.orderServices.createOrderToDB(validationOrderData);
         if (!result) {
             return res.status(404).json({
                 success: false,
@@ -50,7 +53,13 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
     }
     catch (error) {
-        if (error instanceof Error) {
+        if (error instanceof zod_1.z.ZodError) {
+            return res.status(400).json({
+                success: false,
+                message: error.issues
+            });
+        }
+        else if (error instanceof Error) {
             if (error.name === "ValidationError") {
                 return res.status(400).json({
                     success: false,

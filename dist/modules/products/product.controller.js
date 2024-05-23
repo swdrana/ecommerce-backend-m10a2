@@ -10,10 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productController = void 0;
+const zod_1 = require("zod");
 const product_services_1 = require("./product.services");
+const product_validation_1 = require("./product.validation");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield product_services_1.productServices.createProduct(req.body);
+        const validateData = product_validation_1.productValidationSchema.parse(req.body);
+        const result = yield product_services_1.productServices.createProduct(validateData);
         res.json({
             success: true,
             message: "Product created successfully",
@@ -21,7 +24,14 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
-        if (error instanceof Error && error.name === "ValidationError") {
+        if (error instanceof zod_1.z.ZodError) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation error",
+                errors: error.errors
+            });
+        }
+        else if (error instanceof Error) {
             return res.status(500).json({
                 success: false,
                 message: "Failed to create product",
