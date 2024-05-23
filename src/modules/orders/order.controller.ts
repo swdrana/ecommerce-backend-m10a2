@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
+import { z } from "zod";
 import { productServices } from "../products/product.services";
 import { orderServices } from "./order.services";
 import { orderValidationSchema } from "./order.validation";
-import { z } from "zod";
 
 const createOrder = async (req: Request, res: Response) => {
   try {
@@ -32,7 +32,7 @@ const createOrder = async (req: Request, res: Response) => {
 
     // Create the order
     const orderData = { email, productId, price, quantity };
-    const validationOrderData = orderValidationSchema.parse(orderData)
+    const validationOrderData = orderValidationSchema.parse(orderData);
     const result = await orderServices.createOrderToDB(validationOrderData);
 
     if (!result) {
@@ -48,12 +48,12 @@ const createOrder = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    if(error instanceof z.ZodError){
+    if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: error.issues
-      })
-    }else if (error instanceof Error) {
+        message: error.issues,
+      });
+    } else if (error instanceof Error) {
       if (error.name === "ValidationError") {
         return res.status(400).json({
           success: false,
@@ -76,6 +76,9 @@ const createOrder = async (req: Request, res: Response) => {
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
+    const { email } = req.query;
+    if (email) {
+    }
     const result = await orderServices.getAllOrders();
     res.status(200).json({
       success: true,
@@ -100,7 +103,42 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+const searchOrGetAllOrders = async (req: Request, res: Response) => {
+  const { email } = req.query;
+  if (email) {
+    try {
+      const result = await orderServices.getOrdersByEmail(email as string);
+      if (result.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `No orders found matching email '${email}'`,
+        });
+      }
+      res.json({
+        success: true,
+        message: `Orders matching email '${email}' fetched successfully!`,
+        data: result,
+      });
+    } catch (error) {
+      if(error instanceof Error) {
+        res.status(500).json({
+        success: false,
+        message: "Failed to fetch orders",
+        error: error.message,
+      });
+      }
+      res.status(500).json({
+        success: false,
+        message: "An Unknown error occurred",
+      })
+    }
+  } else {
+    getAllOrders(req, res);
+  }
+};
+
 export const orderController = {
   createOrder,
   getAllOrders,
+  searchOrGetAllOrders
 };
