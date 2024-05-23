@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderController = void 0;
+const zod_1 = require("zod");
 const product_services_1 = require("../products/product.services");
 const order_services_1 = require("./order.services");
 const order_validation_1 = require("./order.validation");
-const zod_1 = require("zod");
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, productId, price, quantity } = req.body;
@@ -56,7 +56,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (error instanceof zod_1.z.ZodError) {
             return res.status(400).json({
                 success: false,
-                message: error.issues
+                message: error.issues,
             });
         }
         else if (error instanceof Error) {
@@ -82,6 +82,9 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const { email } = req.query;
+        if (email) {
+        }
         const result = yield order_services_1.orderServices.getAllOrders();
         res.status(200).json({
             success: true,
@@ -107,7 +110,43 @@ const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
 });
+const searchOrGetAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.query;
+    if (email) {
+        try {
+            const result = yield order_services_1.orderServices.getOrdersByEmail(email);
+            if (result.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: `No orders found matching email '${email}'`,
+                });
+            }
+            res.json({
+                success: true,
+                message: `Orders matching email '${email}' fetched successfully!`,
+                data: result,
+            });
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({
+                    success: false,
+                    message: "Failed to fetch orders",
+                    error: error.message,
+                });
+            }
+            res.status(500).json({
+                success: false,
+                message: "An Unknown error occurred",
+            });
+        }
+    }
+    else {
+        getAllOrders(req, res);
+    }
+});
 exports.orderController = {
     createOrder,
     getAllOrders,
+    searchOrGetAllOrders
 };
