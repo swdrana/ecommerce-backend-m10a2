@@ -1,6 +1,6 @@
 // src/modules/users/users.interface.ts
 
-import bcrypt from "bcrypt";
+import bcrypt, { hash } from "bcrypt";
 import mongoose from "mongoose";
 import { BCRYPT_SALT_ROUND } from "../../env-config";
 import { TUser } from "./users.interface";
@@ -34,12 +34,18 @@ const userSchema = new mongoose.Schema<TUser>({
   },
 });
 
+// for password hash before going to controller
 userSchema.pre("save", async function (next) {
   const user = this;
   user.password = await bcrypt.hash(user.password, Number(BCRYPT_SALT_ROUND));
-  // console.log(user.password);
   next();
 });
+
+// for password empty after save and send to user 
+userSchema.post('save', function(doc, next){
+  doc.password='';
+  next();
+})
 
 const UserModel = mongoose.model<TUser>("User", userSchema);
 
