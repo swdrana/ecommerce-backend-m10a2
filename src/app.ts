@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import userRoute from "./modules/users/users.route";
+import notFound from "./middleware/notFound";
 const app = express();
 
 // middleware
@@ -16,8 +17,11 @@ app.get("/", (req, res) => {
     message: "Welcome to Sports Facility Booking Platform Server",
   });
 });
-
 app.use("/api/auth", userRoute);
+
+
+// notFound
+app.use(notFound)
 
 // global error handel
 app.use(globalErrorHandler);
