@@ -1,9 +1,9 @@
 // src/modules/users/users.controller.ts
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { userValidationSchema } from './users.validation';
 import usersModel from './users.model';
 
-const createUser = async (req: Request, res: Response) => {
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Validate the request body against the schema
     const result = userValidationSchema.parse(req.body);
@@ -22,8 +22,7 @@ const createUser = async (req: Request, res: Response) => {
     // Return the created user with a 201 status
     res.status(201).json(newUser);
   } catch (error) {
-    // Handle unexpected errors
-    res.status(500).json({ message: 'Internal server error', error });
+    next(error);
   }
 };
 
