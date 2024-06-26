@@ -8,6 +8,6 @@ import { userLoginValidationSchema, userValidationSchema } from "./users.validat
 const userRoute = Router();
 
 userRoute.post("/signup",validateRequest(userValidationSchema),userController.createUser);
-userRoute.post("/login",validateRequest(userLoginValidationSchema),userController.createUser);
+userRoute.get("/login",validateRequest(userLoginValidationSchema),userController.findUserByEmailPassword);
 
 export default userRoute;
