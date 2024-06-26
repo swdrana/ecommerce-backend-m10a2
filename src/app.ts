@@ -4,6 +4,7 @@ import express from "express";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import userRoute from "./modules/users/users.route";
 import notFound from "./middleware/notFound";
+import facilityRoute from "./modules/facility/facility.route";
 const app = express();
 
 // middleware
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
   });
 });
 app.use("/api/auth", userRoute);
+app.use("/api/facility", facilityRoute );
 
 
 // notFound

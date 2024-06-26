@@ -1,11 +1,10 @@
-import { TUser } from "./facility.interface";
-import UserModel from "./facility.model";
+import { TFacility } from "./facility.interface";
+import FacilityModel from "./facility.model";
 
-const saveUserDataToDB = async (payload: TUser) => {
-  const result = await UserModel.create(payload);
-  return result;
+const createFacilityIntoDb = async (payload: TFacility) => {
+  return await FacilityModel.create(payload);
 };
 
-export const userService = {
-  saveUserDataToDB,
-};
+export const facilityService = {
+  createFacilityIntoDb,
+}

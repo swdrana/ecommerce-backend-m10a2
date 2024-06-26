@@ -1,12 +1,8 @@
-// src/modules/users/users.route.ts\
-
-import { Router } from "express";
-import { userController } from "./facility.controller";
+import express from "express";
 import validateRequest from "../../middleware/validateRequest";
-import { userValidationSchema } from "../users/users.validation";
+import { createFacilityValidationSchema } from "./facility.validation";
+import { facilityController } from "./facility.controller";
+const facilityRoute = express.Router();
 
-const userRoute = Router();
-
-userRoute.post("/signup",validateRequest(userValidationSchema),userController.createUser);
-
-export default userRoute;
+facilityRoute.post('/',validateRequest(createFacilityValidationSchema),facilityController.createFacility);
+export default facilityRoute
