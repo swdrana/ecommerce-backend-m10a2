@@ -1,13 +1,12 @@
 // src/modules/users/users.route.ts\
 
 import { Router } from "express";
-import { userController } from "./users.controller";
+import { userController } from "./facility.controller";
 import validateRequest from "../../middleware/validateRequest";
-import { userLoginValidationSchema, userValidationSchema } from "./users.validation";
+import { userValidationSchema } from "../users/users.validation";
 
 const userRoute = Router();
 
 userRoute.post("/signup",validateRequest(userValidationSchema),userController.createUser);
-userRoute.post("/login",validateRequest(userLoginValidationSchema),userController.createUser);
 
 export default userRoute;

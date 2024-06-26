@@ -12,8 +12,3 @@ export const userValidationSchema = z.object({
   }),
   address: z.string().nonempty({ message: "Address is required" }),
 });
-
-export const userLoginValidationSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(4, { message: "Password must be at least 4 characters long" }),
-})
