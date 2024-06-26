@@ -1,9 +1,8 @@
-//  src/modules/users/users.interface.ts
-export type TUser = {
+//  src/modules/facility/facility.interface.ts
+export type TFacility = {
     name: string;
-    email: string;
-    password: string;
-    phone: string;
-    role: 'admin' | 'user';
-    address: string;
+    description: string;
+    pricePerHour: number;
+    location: string;
+    isDeleted?:boolean
 };
