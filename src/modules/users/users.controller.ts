@@ -4,6 +4,8 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { userService } from "./users.service";
 import { userValidationSchema } from "./users.validation";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../../env-config";
 
 const createUser = catchAsync(async (req, res, next) => {
   // Validate the request body against the schema
@@ -40,10 +42,21 @@ const findUserByEmailPassword = catchAsync(async (req, res, next) => {
       data: null
     })
   }
+
+  // create jwt token
+  const jwtPayload = {
+    _id:user?._id,
+    role: user?.role
+  }
+  const accessToken = jwt.sign(jwtPayload,JWT_SECRET as string, {
+    expiresIn:'1h'
+  })
+  
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "User logged in successfully",
+    token:accessToken,
     data: user,
   });
 });

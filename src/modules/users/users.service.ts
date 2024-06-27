@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { TUser } from "./users.interface";
 import UserModel from "./users.model";
+import { ObjectId } from "mongoose";
 
 const saveUserDataToDB = async (payload: TUser) => {
     const result = await UserModel.create(payload);
@@ -26,7 +27,12 @@ const findUserByEmailPasswordFromDb = async (
   return userWithoutPassword;
 };
 
+const findUserByIdFromDb = async (userId:ObjectId)=>{
+  return await UserModel.findById(userId);
+}
+
 export const userService = {
   saveUserDataToDB,
   findUserByEmailPasswordFromDb,
+  findUserByIdFromDb
 };
