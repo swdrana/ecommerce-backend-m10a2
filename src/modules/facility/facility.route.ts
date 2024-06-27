@@ -9,5 +9,7 @@ facilityRoute.post('/',auth('admin'),validateRequest(createFacilityValidationSch
 
 facilityRoute.put('/:id', auth('admin'), validateRequest(updateFacilityValidationSchema) ,facilityController.updateFacility)
 
+facilityRoute.delete('/:id', auth('admin') ,facilityController.deleteFacilityByID)
+
 
 export default facilityRoute
