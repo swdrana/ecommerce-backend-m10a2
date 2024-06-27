@@ -31,8 +31,15 @@ const deleteFacilityByIDFromDb = async (id: string) => {
   );
 };
 
+
+const getAllFacilityFromDb = async () => {
+  // remove deleted facilities and send only active facilities
+  return await FacilityModel.find({ isDeleted: false });
+}
+
 export const facilityService = {
   createFacilityIntoDb,
   updateFacilityUsingIdIntoDb,
   deleteFacilityByIDFromDb,
+  getAllFacilityFromDb
 };
