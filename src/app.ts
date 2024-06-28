@@ -5,6 +5,7 @@ import globalErrorHandler from "./middleware/globalErrorHandler";
 import userRoute from "./modules/users/users.route";
 import notFound from "./middleware/notFound";
 import facilityRoute from "./modules/facility/facility.route";
+import bookingRoute from "./modules/booking/booking.route";
 const app = express();
 
 // middleware
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/auth", userRoute);
 app.use("/api/facility", facilityRoute );
+app.use("/api/booking",bookingRoute)
 
 
 // notFound
