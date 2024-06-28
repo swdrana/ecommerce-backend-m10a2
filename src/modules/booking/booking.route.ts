@@ -8,4 +8,6 @@ const bookingRoute = Router()
 
 bookingRoute.post('/', auth('user'), validateRequest(createBookingSchema),bookingController.createBooking)
 
+bookingRoute.get('/', auth('admin'),bookingController.getAllBooking)
+
 export default bookingRoute

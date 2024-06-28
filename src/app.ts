@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/auth", userRoute);
 app.use("/api/facility", facilityRoute );
-app.use("/api/booking",bookingRoute)
+app.use("/api/bookings",bookingRoute)
 
 
 // notFound
