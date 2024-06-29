@@ -49,7 +49,7 @@ const findUserByEmailPassword = catchAsync(async (req, res, next) => {
     role: user?.role
   }
   const accessToken = jwt.sign(jwtPayload,JWT_SECRET as string, {
-    expiresIn:'1h'
+    expiresIn:'365d'
   })
   
   sendResponse(res, {
