@@ -12,5 +12,7 @@ bookingRoute.get('/', auth('admin'),bookingController.getAllBooking)
 
 bookingRoute.get('/user', auth('user'),bookingController.viewBookingsByUser)
 
+bookingRoute.delete('/:id', auth('user'), bookingController.cancelBooking);
+
 
 export default bookingRoute

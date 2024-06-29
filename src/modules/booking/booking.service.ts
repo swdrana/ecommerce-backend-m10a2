@@ -55,9 +55,23 @@ const generateAvailableTimeSlots = (bookings: TBooking[]) => {
 };
 
 const viewBookingsByUserFromDB = async (userId: string) => {
-  return await bookingModel
-    .find({ user: userId })
-    .populate("facility")
+  return await bookingModel.find({ user: userId }).populate("facility");
+};
+
+const cancelBookingById = async (bookingId: string, userId: string) => {
+  // Find the booking to cancel
+  const booking = await bookingModel.findOne({ _id: bookingId, user: userId });
+
+  if (!booking) {
+    return null;
+  }
+  
+  booking.isBooked = "canceled";
+
+  // Save the updated booking
+  await booking.save();
+
+  return booking;
 };
 
 export const bookingService = {
@@ -65,4 +79,5 @@ export const bookingService = {
   getAllBookingFromDb,
   checkAvailability,
   viewBookingsByUserFromDB,
+  cancelBookingById,
 };

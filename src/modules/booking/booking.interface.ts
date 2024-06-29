@@ -6,5 +6,5 @@ export type TBooking = {
     user: string;
     facility: string;
     payableAmount: number;
-    isBooked: boolean;
+    isBooked: string;
 }
