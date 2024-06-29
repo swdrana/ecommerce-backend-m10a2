@@ -23,6 +23,14 @@ const createFacility = catchAsync(async (req, res, next) => {
 const updateFacility = catchAsync(async(req,res,next)=>{
   const id = req.params.id
   const updatedFacility = await facilityService.updateFacilityUsingIdIntoDb(id,req.body)
+  if (!updateFacility) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "Facility not found",
+      data: [],
+    })
+  }
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
