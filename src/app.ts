@@ -6,6 +6,7 @@ import userRoute from "./modules/users/users.route";
 import notFound from "./middleware/notFound";
 import facilityRoute from "./modules/facility/facility.route";
 import bookingRoute from "./modules/booking/booking.route";
+import { bookingController } from "./modules/booking/booking.controller";
 const app = express();
 
 // middleware
@@ -23,6 +24,7 @@ app.use("/api/auth", userRoute);
 app.use("/api/facility", facilityRoute );
 app.use("/api/bookings",bookingRoute)
 
+app.get('/api/check-availability', bookingController.checkAvailability);
 
 // notFound
 app.use(notFound)

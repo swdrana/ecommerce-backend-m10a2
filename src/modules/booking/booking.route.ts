@@ -10,5 +10,7 @@ bookingRoute.post('/', auth('user'), validateRequest(createBookingSchema),bookin
 
 bookingRoute.get('/', auth('admin'),bookingController.getAllBooking)
 
+bookingRoute.get('/user', auth('user'),bookingController.viewBookingsByUser)
+
 
 export default bookingRoute
